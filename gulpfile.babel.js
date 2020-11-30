@@ -56,6 +56,24 @@ gulp.task('sass', () => {
     .pipe(bs.stream());
 });
 
+// vertをコピー
+gulp.task('vert', () => {
+  return gulp
+    .src('./src/assets/glsl/**/*.vert', {
+      base: './src/assets/glsl'
+    })
+    .pipe(bs.stream());
+});
+
+// vertをコピー
+gulp.task('frag', () => {
+  return gulp
+    .src('./src/assets/glsl/**/*.frag', {
+      base: './src/assets/glsl'
+    })
+    .pipe(bs.stream());
+});
+
 // いろんな拡張子を圧縮するためのオプション
 const imageminOption = [
   pngquant({ speed: 1 }),
@@ -96,6 +114,7 @@ gulp.task('reload', (done) => {
 // ファイル監視(doneする)
 gulp.task('watch', (done) => {
   gulp.watch('./src/assets/sass/**/*.scss', gulp.task('sass'));
+  gulp.watch('./src/assets/glsl/*', gulp.series('vert', 'frag'));
   gulp.watch('./src/assets/js/*.js', gulp.task('webpack'));
   gulp.watch('./src/index.html', gulp.series('copy', 'reload'));
   done();
@@ -111,7 +130,7 @@ gulp.task('serve', () => {
 // webpack追加
 gulp.task(
   'default',
-  gulp.series('sass', 'imagemin', 'webpack', 'copy', 'watch', 'serve', function (done) {
+  gulp.series('sass', 'vert', 'frag', 'imagemin', 'webpack', 'copy', 'watch', 'serve', function (done) {
     done();
   })
 );

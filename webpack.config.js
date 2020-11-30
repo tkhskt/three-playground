@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = {
   mode: 'production', // 本番用（開発ならdevelopment（圧縮されない））
   entry: './src/assets/js/index.js', // バンドル前のやつのエントリポイント
+  devtool: 'inline-source-map',
   output: {
     // バンドル先
     filename: 'bundle.js',
@@ -39,6 +40,13 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.(glsl|vs|fs|vert|frag)$/,
+        exclude: /node_modules/,
+        use: [
+          'raw-loader',
+        ]
+      }
     ],
   },
 };
